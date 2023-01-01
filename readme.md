@@ -20,7 +20,14 @@ It follows the [W3C Extended Log File Format](https://www.w3.org/TR/WD-logfile.h
 - sc-win32-status
 - time-taken
 
-To keep the logs realistic, the same pages and IP addresses are used multiple times, other fields are randomly generated.
+To make the logs more realistic, the same pages and IP addresses are used multiple times, other fields are randomly generated.
 
 ## Usage
 Change the variables in the top of the script to suit your needs and run it.
+
+
+## TODO
+- Normal distributation of traffic 
+- More realistic IP addresses 
+- Better page names
+- Better distribution of status codes and request types
