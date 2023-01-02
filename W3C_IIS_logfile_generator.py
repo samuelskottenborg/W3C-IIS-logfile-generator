@@ -50,8 +50,9 @@ common_uri_stems = []
 for i in range(0, 100):
     common_uri_stems.append("/" + str(random.randint(0, 1000000)))
     
-# Create list of request methods
+# Create list of request methods and status codes
 request_methods = ["GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS", "CONNECT", "TRACE", "PATCH"]
+status_codes = ["200", "201", "202", "203", "204", "205", "206", "207", "208", "226", "300", "301", "302", "303", "304", "305", "306", "307", "308", "400", "401", "402", "403", "404", "405", "406", "407", "408", "409", "410", "411", "412", "413", "414", "415", "416", "417", "418", "421", "422", "423", "424", "425", "426", "428", "429", "431", "451", "500", "501", "502", "503", "504", "505", "506", "507", "508", "510", "511"]
 
 # Generate logs
 for i in range(0, num_files):
@@ -80,7 +81,7 @@ for i in range(0, num_files):
         user_agent = user_agents[random.randint(0, len(user_agents) - 1)]
         
         # Create status code
-        status_code = str(random.randint(200, 500))
+        status_code = status_codes[random.randint(0, len(status_codes) - 1)]
         
         # Create time taken
         time_taken = str(random.randint(0, 1000))
