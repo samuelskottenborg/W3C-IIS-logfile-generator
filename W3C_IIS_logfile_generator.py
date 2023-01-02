@@ -10,7 +10,8 @@ import os
 
 # Please change the following variables to suit your needs
 num_files = 10
-num_lines = 1000
+min_num_lines = 100
+max_num_lines = 10000
 date_start = "2022-12-01"
 date_end = "2023-5-01"
 log_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "logs")
@@ -28,15 +29,15 @@ date_list = [date_start + datetime.timedelta(days=x) for x in range(0, (date_end
 ip_list = []
 
 # Local IPs
-for i in range(0, int(num_lines * num_files / 50 + 1)):
+for i in range(0, int(min_num_lines * num_files / 50 + 1)):
     ip_list.append("192.168.0." + str(random.randint(1, 254)))
     
 # External IPs
-for i in range(0, int(num_lines * num_files / 50 + 1)):
+for i in range(0, int(min_num_lines * num_files / 50 + 1)):
     ip_list.append(str(random.randint(1, 254)) + "." + str(random.randint(1, 254)) + "." + str(random.randint(1, 254)) + "." + str(random.randint(1, 254)))
     
 # Repeat some IPs multiple times to get a more realistic distribution 
-for i in range(0, int(num_lines * num_files / 10 + 1)):
+for i in range(0, int(min_num_lines * num_files / 10 + 1)):
     ip_list[random.randint(0, len(ip_list) - 1)] = ip_list[random.randint(0, len(ip_list) - 1)]
     
 # Create list of user agents (list from https://www.useragents.me/)
@@ -65,7 +66,7 @@ for i in range(0, num_files):
     f.write("#Fields: date time s-ip cs-method cs-uri-stem cs-uri-query s-port cs-username c-ip cs(User-Agent) cs(Referer) sc-status sc-substatus sc-win32-status time-taken\r")
     
     # Write lines
-    for j in range(0, num_lines):
+    for j in range(0, random.randint(min_num_lines, max_num_lines)):
         # Create date
         date = date_list[i].strftime("%Y-%m-%d") + " " + str(random.randint(0, 23)).zfill(2) + ":" + str(random.randint(0, 59)).zfill(2) + ":" + str(random.randint(0, 59)).zfill(2)
         
