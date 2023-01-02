@@ -89,8 +89,11 @@ for i in range(0, num_files):
         # Get a random request method
         request_method = request_methods[random.randint(0, len(request_methods) - 1)]
         
+        # Random port (80 or 443)
+        port = random.choices([80, 443], [0.7, 0.3])[0]
+        
         # Write line
-        f.write(date + " " + ip + " " + request_method + " " + uri_stem + " - 80 - " + ip + " " + user_agent + " - " + status_code + " 0 0 " + time_taken + "\r")
+        f.write(date + " " + ip + " " + request_method + " " + uri_stem + " - " + str(port) + " - " + ip + " " + user_agent + " - " + status_code + " 0 0 " + time_taken + "\r")
         
     # Close file
     f.close()
