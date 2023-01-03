@@ -1,6 +1,6 @@
 # IIS log generator
 ## Introduction
-This script generates IIS log files which is useful for testing log analysis tools.
+This script generates IIS log files which is useful for testing log analysis tools. The status codes, HTTP/HTTPS ratio and request methods all follow customizable random distributions.
 
 It follows the [W3C Extended Log File Format](https://www.w3.org/TR/WD-logfile.html) and generates a log file with the following fields:
 
@@ -27,7 +27,5 @@ Change the variables in the top of the script to suit your needs and run it.
 
 
 ## TODO
-- Normal distributation of traffic 
-- More realistic IP addresses 
+- More realistic distributation of traffic 
 - Better page names
-- Better distribution of status codes

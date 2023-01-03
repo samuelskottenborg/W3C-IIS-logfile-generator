@@ -38,13 +38,14 @@ status_codes = ["200", "201", "202", "203", "204", "205", "206", "207", "208", "
 
 # Set to 1/len(status_codes)
 # Distribution of status codes
-status_codes_distribution = [1 / len(status_codes)] * len(status_codes)
+status_codes_distribution = [0.6, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.04, 0.005, 0.005, 0.08, 0.005, 0.005, 0.005, 0.005, 0.005,
+                             0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005]
 
 # %% Functions
 
 
 def check_distribution(distribution, name):
-    if sum(distribution) != 1:
+    if sum(distribution) > 1.01 or sum(distribution) < 0.99:
         print("Error: Distributions do not add up to 1 (" +
               str(sum(distribution)) + "), please check the " + name + " variable.")
         exit()
@@ -77,6 +78,7 @@ if seed is not None:
 # Check if distributions add up to 1
 check_distribution(request_distribution, "request_distributions")
 check_distribution(request_port_distribution, "request_port_distribution")
+check_distribution(status_codes_distribution, "status_codes_distribution")
 
 # Create log path if it doesn't exist
 if not os.path.exists(log_path):
@@ -91,7 +93,7 @@ date_list = [date_start + datetime.timedelta(days=x)
 # Create list of local and external IPs (1 pr. every 100 request/line).
 ip_list = []
 
-for i in range(0, int((min_num_lines / 50) * num_files)): 
+for i in range(0, int((min_num_lines / 50) * num_files)):
     ip_list.append(generate_ip(local=False))
     ip_list.append(generate_ip(local=True))
 
