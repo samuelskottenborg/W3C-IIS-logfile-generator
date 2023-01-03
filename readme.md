@@ -30,4 +30,4 @@ Change the variables in the top of the script to suit your needs and run it.
 - Normal distributation of traffic 
 - More realistic IP addresses 
 - Better page names
-- Better distribution of status codes and request types
+- Better distribution of status codes
