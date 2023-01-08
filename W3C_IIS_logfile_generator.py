@@ -5,8 +5,9 @@ import os
 # %% User defined variables
 # Please change the following variables to suit your needs
 
-seed = 1234  # Seed for random number generator, set to None for random seed
+seed = None  # Seed for random number generator, set to None for random seed
 
+num_ips = 200 # Number of unique IP addresses to generate
 num_files = 15  # Number of log files to generate
 min_num_lines = 100  # Minimum number of lines per file
 max_num_lines = 10000  # Maximum number of lines per file
@@ -107,14 +108,22 @@ date_list = [date_start + datetime.timedelta(days=x)
 # Create list of local and external IPs (1 pr. every 100 request/line).
 ip_list = []
 
-for i in range(0, int((min_num_lines / 50) * num_files)):
-    ip_list.append(generate_ip(local=False))
-    ip_list.append(generate_ip(local=True))
-
-# Repeat some IPs multiple times to get a more realistic distribution
-for i in range(0, int(min_num_lines * num_files / 10 + 1)):
-    ip_list[random.randint(0, len(ip_list) - 1)
-            ] = ip_list[random.randint(0, len(ip_list) - 1)]
+for i in range(0, int(num_ips/2)):
+    ip = generate_ip(local=False)
+    while ip in ip_list:
+        ip = generate_ip(local=False)
+    ip_list.append(ip)
+    
+    ip = generate_ip(local=True)
+    while ip in ip_list:
+        ip = generate_ip(local=True)
+    ip_list.append(ip)
+    
+# Create a random distribution of likelihood of visit for each IP (sums to 1)
+ip_distribution = []
+for i in range(0, len(ip_list)):
+    ip_distribution.append(random.random())
+ip_distribution = [i/sum(ip_distribution) for i in ip_distribution]
 
 # Get user agents
 user_agents = get_user_agents()
@@ -125,6 +134,8 @@ for i in range(0, 100):
     common_uri_stems.append("/" + str(random.randint(0, 1000000)))
 
 # Generate logs
+print("Generating logs")
+
 for i in range(0, num_files):
     file_name = get_file_name(date_list)
 
@@ -141,7 +152,7 @@ for i in range(0, num_files):
             2) + ":" + str(random.randint(0, 59)).zfill(2) + ":" + str(random.randint(0, 59)).zfill(2)
 
         # Create IP
-        ip = ip_list[random.randint(0, len(ip_list) - 1)]
+        ip = ip_list[random.choices(range(0, len(ip_list)), ip_distribution)[0]]
 
         # Create URI stem
         uri_stem = common_uri_stems[random.randint(
