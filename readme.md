@@ -30,4 +30,3 @@ Change the variables in the top of the script to suit your needs and run it.
 
 ## TODO
 - More realistic distributation of traffic 
-- Better page names
