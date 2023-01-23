@@ -1,6 +1,7 @@
 import datetime
 import random
 import os
+import math
 
 # %% User defined variables
 # Please change the following variables to suit your needs
@@ -8,12 +9,14 @@ import os
 seed = None  # Seed for random number generator, set to None for random seed
 
 num_ips = 200 # Number of unique IP addresses to generate
-num_files = 15  # Number of log files to generate
+num_files = 100  # Number of log files to generate
 min_num_lines = 100  # Minimum number of lines per file
 max_num_lines = 10000  # Maximum number of lines per file
 
-date_start = "2022-12-01"  # Start date for log files
-date_end = "2023-01-10"  # End date for log files
+date_start = "2022-12-03"  # Start date for log files
+date_end = "2022-12-10"  # End date for log files
+
+delete_logs = True  # Delete old log files before generating new ones
 
 # Path to save log files to (leave unchanged if you want to save in the same folder as the script)
 log_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "logs")
@@ -75,7 +78,7 @@ def get_file_name(date_list):
     # Create file name (random date in YYMMDDHH format)
     file_name = "u_ex" + \
         date_list[random.randint(0, len(date_list) - 1)
-                  ].strftime("%y%m%d") + random.choice(["00", "24"]) + ".log"
+                  ].strftime("%y%m%d") + random.randint(0, 24).__str__().zfill(2) + ".log"
     file_name = os.path.join(log_path, file_name)
     
     # Check if file already exists
@@ -98,12 +101,15 @@ check_distribution(status_codes_distribution, "status_codes_distribution")
 # Create log path if it doesn't exist
 if not os.path.exists(log_path):
     os.makedirs(log_path)
+    
+# Empty log path if old logs should be deleted
+[os.remove(os.path.join(log_path, file)) for file in os.listdir(log_path) if delete_logs]
 
 # Create list of dates
 date_start = datetime.datetime.strptime(date_start, "%Y-%m-%d")
 date_end = datetime.datetime.strptime(date_end, "%Y-%m-%d")
-date_list = [date_start + datetime.timedelta(days=x)
-             for x in range(0, (date_end-date_start).days + 1)]
+days_between = (date_end - date_start).days + 1
+date_list = [date_start + datetime.timedelta(days=x) for x in range(0, days_between)]
 
 # Create list of local and external IPs (1 pr. every 100 request/line).
 ip_list = []
@@ -128,10 +134,8 @@ ip_distribution = [i/sum(ip_distribution) for i in ip_distribution]
 # Get user agents
 user_agents = get_user_agents()
 
-# Create list of random common URI stems for use in the test
-common_uri_stems = []
-for i in range(0, 100):
-    common_uri_stems.append("/" + str(random.randint(0, 1000000)))
+# List of URI stems loaded from "common_uri_stems.txt"
+common_uri_stems = [line.strip() for line in open("common_uri_stems.txt", "r")]
 
 # Generate logs
 print("Generating logs")
@@ -147,8 +151,9 @@ for i in range(0, num_files):
 
     # Write lines
     for j in range(0, random.randint(min_num_lines, max_num_lines)):
-        # Create date
-        date = date_list[i].strftime("%Y-%m-%d") + " " + str(random.randint(0, 23)).zfill(
+        # Create date 
+        date = date_list[random.randint(0, len(date_list) - 1)].strftime("%Y-%m-%d")
+        date = date + " " + str(random.randint(0, 23)).zfill(
             2) + ":" + str(random.randint(0, 59)).zfill(2) + ":" + str(random.randint(0, 59)).zfill(2)
 
         # Create IP
